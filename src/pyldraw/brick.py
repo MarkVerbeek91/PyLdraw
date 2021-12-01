@@ -19,6 +19,11 @@ class Brick:
         position_string = ", ".join([f"{p} : {l}" for p, l in zip(['X', 'Y', 'Z'], self.position)])
         return f"Name: {self.name}\nPosition:\n {position_string}"
 
+    def __repr__(self):
+        position = " ".join([str(i) for i in self.position])
+        orientation = " ".join([str(int(i) if i.is_integer() else i) for i in self.orientation.flatten()])
+        return f"1 15 {position} {orientation} {self.name}"
+
 
 class BrickFactory:
     @staticmethod

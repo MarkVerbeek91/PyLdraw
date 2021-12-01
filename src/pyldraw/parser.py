@@ -6,10 +6,34 @@ def parser(data):
 
     for line in data:
         parts = line.split(' ')
-        if parts[0] == '0':
-            if parts[1].upper() == 'FILE':
-                result['name'] = parts[-1].split('.')[0]
-        elif parts[0] == '1':
-            brick = BrickFactory.gen(" ".join(parts[1:]))
-            result['bricks'] = [brick]
+        if is_special_line(parts):
+            process_special_line(parts, result)
+        elif is_ldr_line(parts):
+            add_brick(parts, result)
     return result
+
+
+def process_special_line(parts, result):
+    if is_file_keyword(parts):
+        set_name(parts, result)
+
+
+def set_name(parts, result):
+    result['name'] = parts[-1].split('.')[0]
+
+
+def is_file_keyword(parts):
+    return parts[1].upper() == 'FILE'
+
+
+def add_brick(parts, result):
+    brick = BrickFactory.gen(" ".join(parts[1:]))
+    result.setdefault('bricks', []).append(brick)
+
+
+def is_ldr_line(parts):
+    return parts[0] == '1'
+
+
+def is_special_line(parts):
+    return parts[0] == '0'

@@ -17,3 +17,10 @@ def test_get_part_as_dict():
     assert 'bricks' in result
     list_same = Counter(result['bricks']) == Counter([Brick(name='brick')])
     assert list_same
+
+
+def test_get_multiple_parts_in_dict():
+    lines = ['1 15 0 0 0 1 0 0 0 1 0 0 0 1 brick.ldr'] * 2
+    result = parser(lines)
+    list_same = Counter(result['bricks']) == Counter([Brick(name='brick'), Brick(name='brick')])
+    assert list_same

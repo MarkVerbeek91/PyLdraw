@@ -47,6 +47,11 @@ def test_brick_print_info():
     assert str(brick) == "Name: \nPosition:\n X : 0, Y : 0, Z : 0"
 
 
+def test_brick_repr_info():
+    brick = Brick(name='brick.ldr')
+    assert repr(brick) == "1 15 0 0 0 1 0 0 0 1 0 0 0 1 brick.ldr"
+
+
 def test_brick_factory():
     result = Factory.gen('15 0 0 0 1 0 0 0 1 0 0 0 1 brick.ldr')
     assert isinstance(result, Brick)
