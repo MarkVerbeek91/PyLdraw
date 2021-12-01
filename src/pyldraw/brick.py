@@ -6,6 +6,7 @@ class Brick:
         self.name = kwargs.pop('name', '')
         self.position = kwargs.pop('position', [0, 0, 0])
         self.orientation = kwargs.pop('orientation', np.eye(3))
+        self.color = kwargs.pop('color', 16)
 
     def __eq__(self, other):
         return self.name == other.name and \
@@ -22,7 +23,7 @@ class Brick:
     def __repr__(self):
         position = " ".join([str(i) for i in self.position])
         orientation = " ".join([str(int(i) if i.is_integer() else i) for i in self.orientation.flatten()])
-        return f"1 15 {position} {orientation} {self.name}"
+        return f"1 {self.color} {position} {orientation} {self.name}"
 
 
 class BrickFactory:

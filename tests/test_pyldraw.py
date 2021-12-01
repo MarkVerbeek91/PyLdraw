@@ -28,6 +28,10 @@ def test_ldr_model_get_file_name(path_single_brick_model):
     assert model.name == 'single_brick.ldr'
 
 
+def test_ldr_model_has_length_one_as_minimum():
+    assert len(LdrModel(Path())) == 1
+
+
 def test_single_brick_ldr_model_is_initialised(path_single_brick_model):
     model = LdrModel(path_single_brick_model)
     assert len(model) == 1
@@ -61,9 +65,13 @@ def test_save_to_file():
     mock_file.assert_called_once_with(Path(), 'w')
 
 
-def test_save_to_file_content(single_brick):
+def test_repr_content_with_bricks(single_brick):
     model = LdrModel(Path('single_brick.ldr'))
     model.add(Brick(name='brick.ldr'))
 
     assert repr(model) == single_brick
 
+
+def test_repr_content_as_import_model():
+    model = LdrModel(Path('test_file.ldr'))
+    assert repr(model) == '1 16 0 0 0 1 0 0 0 1 0 0 0 1 test_file.ldr'

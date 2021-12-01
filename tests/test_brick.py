@@ -21,6 +21,11 @@ def test_brick_default_orientation():
     np.testing.assert_array_equal(default_brick.orientation, np.eye(3))
 
 
+def test_brick_default_color():
+    default_brick = Brick()
+    assert default_brick.color == 16
+
+
 def test_bricks_with_same_data_are_same():
     brick1 = Brick()
     brick2 = Brick()
@@ -48,7 +53,7 @@ def test_brick_print_info():
 
 
 def test_brick_repr_info():
-    brick = Brick(name='brick.ldr')
+    brick = Brick(name='brick.ldr', color=15)
     assert repr(brick) == "1 15 0 0 0 1 0 0 0 1 0 0 0 1 brick.ldr"
 
 

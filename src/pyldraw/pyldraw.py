@@ -1,9 +1,11 @@
 from pathlib import Path
 from pyldraw.parser import parser
+from pyldraw.brick import Brick
 
 
-class LdrModel:
-    def __init__(self, path: Path):
+class LdrModel(Brick):
+    def __init__(self, path: Path, **kwargs):
+        super(LdrModel, self).__init__(**kwargs)
         self.name = path.name
         self.data = {}
         self.parse_file_if_exist(path)
@@ -15,12 +17,19 @@ class LdrModel:
             self.data = parser(data)
 
     def __len__(self):
-        return len(self.data['bricks'])
+        return len(self.data.get('bricks', [1]))
 
     def __repr__(self):
+        repr_str = self.get_file_content() if 'bricks' in self.data else self.get_file_import()
+        return repr_str
+
+    def get_file_content(self):
         data = "\n".join([repr(brick) for brick in self.data['bricks']])
         repr_str = f"0 FILE {self.name}\n{data}"
         return repr_str
+
+    def get_file_import(self):
+        return super().__repr__()
 
     def add(self, brick):
         self.data.setdefault('bricks', []).append(brick)
