@@ -10,6 +10,7 @@ class LdrModel(Brick):
         self.name = path.name
         self.data = {}
         self.parse_file_if_exist(path)
+        self._parent = kwargs.pop("parent", None)
 
     def parse_file_if_exist(self, path):
         if path.is_file():
@@ -22,9 +23,12 @@ class LdrModel(Brick):
 
     def __repr__(self):
         repr_str = (
-            self.get_file_content() if "bricks" in self.data else self.get_file_import()
+            self.get_file_content() if self.is_top_level() else self.get_file_import()
         )
         return repr_str
+
+    def is_top_level(self):
+        return "bricks" in self.data and self._parent is None
 
     def get_file_content(self):
         data = "\n".join([repr(brick) for brick in self.data["bricks"]])
@@ -36,7 +40,24 @@ class LdrModel(Brick):
 
     def add(self, brick):
         self.data.setdefault("bricks", []).append(brick)
+        if isinstance(brick, LdrModel):
+            brick.parent = self
 
     def save(self, path):
         with open(path, "w") as out_file:
             out_file.write(repr(self))
+
+    @property
+    def parent(self):
+        return self._parent
+
+    @parent.setter
+    def parent(self, parent):
+        if isinstance(parent, LdrModel):
+            self._parent = parent
+        else:
+            raise NotLdrModelError("LdrModel does only accept LdrModels as parent")
+
+
+class NotLdrModelError(Exception):
+    """Custom Error to raise"""

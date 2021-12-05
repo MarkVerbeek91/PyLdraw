@@ -4,7 +4,7 @@ from unittest import mock
 import pytest
 
 from pyldraw.brick import Brick
-from pyldraw.pyldraw import LdrModel
+from pyldraw.pyldraw import LdrModel, NotLdrModelError
 
 
 def test_ldr_model_new_file():
@@ -69,9 +69,56 @@ def test_repr_content_with_bricks(single_brick):
     model = LdrModel(Path("single_brick.ldr"))
     model.add(Brick(name="brick.ldr"))
 
-    assert repr(model) == single_brick
+    assert repr(model) + "\n" == single_brick
 
 
 def test_repr_content_as_import_model():
     model = LdrModel(Path("test_file.ldr"))
     assert repr(model) == "1 16 0 0 0 1 0 0 0 1 0 0 0 1 test_file.ldr"
+
+
+def test_repr_content_with_brick_and_import_with_bricks():
+    parent = LdrModel(Path("Parent.ldr"))
+    parent.add(Brick(name="brick.ldr"))
+
+    child = LdrModel(Path("Child.ldr"))
+    child.add(Brick(name="brick.ldr"))
+    parent.add(child)
+    assert repr(parent) == "\n".join(
+        [
+            "0 FILE Parent.ldr",
+            "1 16 0 0 0 1 0 0 0 1 0 0 0 1 brick.ldr",
+            "1 16 0 0 0 1 0 0 0 1 0 0 0 1 Child.ldr",
+        ]
+    )
+
+
+def test_only_ldr_model_as_parent():
+    parent = LdrModel(Path(""))
+    child = LdrModel(Path(""), parent=parent)
+    assert child.parent == parent
+
+
+def test_parent_is_default_none():
+    parent = LdrModel(Path(""))
+    assert parent.parent is None
+
+
+def test_child_get_set_parent():
+    child = LdrModel(Path(""))
+    parent = LdrModel(Path(""))
+    child.parent = parent
+    assert child.parent == parent
+
+
+def test_child_only_accepts_ldr_models_as_parent():
+    child = LdrModel(Path())
+    with pytest.raises(NotLdrModelError):
+        child.parent = 42
+
+
+def test_parent_add_itself_as_parent_to_child():
+    parent = LdrModel(Path())
+    child = LdrModel(Path())
+    parent.add(child)
+    assert child.parent == parent
