@@ -45,7 +45,7 @@ class LdrModel(Brick):
 
     def save(self, path):
         with open(path, "w") as out_file:
-            out_file.write(repr(self))
+            out_file.write(self.get_file_content())
 
     @property
     def parent(self):

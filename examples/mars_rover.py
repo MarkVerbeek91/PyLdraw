@@ -16,3 +16,4 @@ mars_rover.add(terrain)
 
 if __name__ == "__main__":
     mars_rover.save(Path("tmp", "mars_rover.ldr"))
+    terrain.save(Path("tmp", "terrain.ldr"))

@@ -12,6 +12,12 @@ def test_get_file_as_dict():
     assert result == {"name": "file_name"}
 
 
+def test_process_special_line():
+    line = ["0 UNKNOWN"]
+    result = parser(line)
+    assert result == {}
+
+
 def test_get_part_as_dict():
     line = ["1 15 0 0 0 1 0 0 0 1 0 0 0 1 brick.ldr"]
     result = parser(line)
