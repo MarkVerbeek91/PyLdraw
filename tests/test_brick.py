@@ -51,9 +51,20 @@ def test_brick_print_info():
     assert str(brick) == "Name: \nPosition:\n X : 0, Y : 0, Z : 0"
 
 
-def test_brick_repr_info():
-    brick = Brick(name="brick.ldr", color=15)
-    assert repr(brick) == "1 15 0 0 0 1 0 0 0 1 0 0 0 1 brick.ldr"
+@pytest.mark.parametrize(
+    "input_kwargs,expected",
+    [
+        (dict(color=15), "15 0 0 0 1 0 0 0 1 0 0 0 1"),
+        (dict(position=[0.1, 0.2, 0.3]), "16 0.1 0.2 0.3 1 0 0 0 1 0 0 0 1"),
+        (
+            dict(orientation=np.array([[1, 2, 3], [2, 3, 4], [3, 4, 5.6]])),
+            "16 0 0 0 1 2 3 2 3 4 3 4 5.6",
+        ),
+    ],
+)
+def test_brick_repr_info(input_kwargs, expected):
+    brick = Brick(name="brick.ldr", **input_kwargs)
+    assert repr(brick) == f"1 {expected} brick.ldr"
 
 
 def test_brick_factory():
@@ -61,14 +72,29 @@ def test_brick_factory():
     assert isinstance(result, Brick)
 
 
-def test_brick_factory_set_position():
-    result = Factory.gen("15 1 2 3 1 0 0 0 1 0 0 0 1 brick.ldr")
-    assert result.position == [1, 2, 3]
+@pytest.mark.parametrize(
+    "position,expected",
+    [
+        ("1 2 3", [1, 2, 3]),
+        ("1.0 2.0 3.0", [1, 2, 3]),
+        ("1.2 3.4 5.6", [1.2, 3.4, 5.6]),
+    ],
+)
+def test_brick_factory_set_position(position, expected):
+    result = Factory.gen(f"15 {position} 1 0 0 0 1 0 0 0 1 brick.ldr")
+    assert result.position == expected
 
 
-def test_brick_factory_set_orientation():
-    result = Factory.gen("15 1 2 3 1 2 3 2 3 4 3 4 5 brick.ldr")
-    expected = np.array([[1, 2, 3], [2, 3, 4], [3, 4, 5]])
+@pytest.mark.parametrize(
+    "orientation,expected",
+    [
+        ("1 2 3 2 3 4 3 4 5", [[1, 2, 3], [2, 3, 4], [3, 4, 5]]),
+        ("1 2 3 2 3 4 3 4 5.0", [[1, 2, 3], [2, 3, 4], [3, 4, 5]]),
+    ],
+)
+def test_brick_factory_set_orientation(orientation, expected):
+    result = Factory.gen(f"15 0 0 0 {orientation} brick.ldr")
+    expected = np.array(expected)
     np.testing.assert_array_equal(result.orientation, expected)
 
 

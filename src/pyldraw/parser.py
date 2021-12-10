@@ -1,3 +1,5 @@
+import re
+
 from pyldraw.brick import BrickFactory
 
 
@@ -5,7 +7,7 @@ def parser(data):
     result = {}
 
     for line in data:
-        parts = line.split(" ")
+        parts = [part for part in re.split("\\s+", line) if part != ":"]
         if is_special_line(parts):
             process_special_line(parts, result)
         elif is_ldr_line(parts):
@@ -16,6 +18,8 @@ def parser(data):
 def process_special_line(parts, result):
     if is_file_keyword(parts):
         set_name(parts, result)
+    elif "author" in parts[1].lower():
+        result["Author"] = parts[2]
 
 
 def set_name(parts, result):

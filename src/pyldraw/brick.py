@@ -5,7 +5,7 @@ class Brick:
     def __init__(self, **kwargs):
         self.name = kwargs.pop("name", "")
         self.position = kwargs.pop("position", [0, 0, 0])
-        self.orientation = kwargs.pop("orientation", np.eye(3))
+        self.orientation = kwargs.pop("orientation", np.eye(3, dtype=int))
         self.color = kwargs.pop("color", 16)
 
     def __eq__(self, other):
@@ -26,10 +26,16 @@ class Brick:
 
     def __repr__(self):
         position = " ".join([str(i) for i in self.position])
-        orientation = " ".join(
-            [str(int(i) if i.is_integer() else i) for i in self.orientation.flatten()]
-        )
+        orientation = " ".join([num2str(i) for i in self.orientation.flatten()])
         return f"1 {self.color} {position} {orientation} {self.name}"
+
+
+def str2num(i):
+    return float(i) if "." in i else int(i)
+
+
+def num2str(i):
+    return f"{i:g}"
 
 
 class BrickFactory:
@@ -46,12 +52,12 @@ class BrickFactory:
 
     @staticmethod
     def get_position(elms):
-        return [int(i) for i in elms]
+        return [str2num(i) for i in elms]
 
     @staticmethod
     def get_orientation(elms):
         rows = [row for row in BrickFactory.split_into_rows(elms)]
-        return np.array([[int(i) for i in row] for row in rows])
+        return np.array([[str2num(i) for i in row] for row in rows])
 
     @staticmethod
     def split_into_rows(elms):
