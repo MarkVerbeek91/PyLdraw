@@ -2,9 +2,10 @@ from collections import Counter
 
 import pytest
 
-from pyldraw import parser
 from pyldraw.brick import Brick
+from pyldraw.parser import ParserError
 from pyldraw.parser import parser as file_parser
+from pyldraw.step import Step
 
 
 def test_empty_file_is_empty_dict():
@@ -32,8 +33,20 @@ def test_comment_line_with_author_line_is_dict_with_author_keyword(test_input):
     assert file_parser([test_input]) == {"Author": "LDraw"}
 
 
-def test_get_part_as_dict():
-    line = ["1 15 0 0 0 1 0 0 0 1 0 0 0 1 brick.ldr"]
+def test_comment_line_with_step_no_brick_line_result_in_error():
+    line = ["0 STEP"]
+    with pytest.raises(ParserError):
+        file_parser(line)
+
+
+def test_comment_line_with_step_keyword_add_next_brick_to_step(default_brick):
+    line = ["0 STEP", default_brick]
+    assert len(file_parser(line)["steps"]) == 1
+    assert len(file_parser(line)["steps"][0]) == 1
+
+
+def test_get_part_as_dict(default_brick):
+    line = [default_brick]
     result = file_parser(line)
     assert Counter(result["bricks"]) == Counter([Brick(name="brick")])
 
@@ -49,7 +62,6 @@ def test_get_part_with_float_positions_as_dict():
 def test_get_multiple_parts_in_dict():
     lines = ["1 15 0 0 0 1 0 0 0 1 0 0 0 1 brick.ldr"] * 2
     result = file_parser(lines)
-    list_same = Counter(result["bricks"]) == Counter(
+    assert Counter(result["bricks"]) == Counter(
         [Brick(name="brick"), Brick(name="brick")]
     )
-    assert list_same

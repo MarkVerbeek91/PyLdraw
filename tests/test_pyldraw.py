@@ -66,28 +66,28 @@ def test_save_to_file():
 
 
 def test_repr_content_with_bricks(single_brick):
-    model = LdrModel(Path("single_brick.ldr"))
-    model.add(Brick(name="brick.ldr"))
+    model = LdrModel(Path("single_brick"))
+    model.add(Brick(name="brick"))
 
     assert repr(model) + "\n" == single_brick
 
 
 def test_repr_content_as_import_model():
-    model = LdrModel(Path("test_file.ldr"))
+    model = LdrModel(Path("test_file"))
     assert repr(model) == "1 16 0 0 0 1 0 0 0 1 0 0 0 1 test_file.ldr"
 
 
 def test_repr_content_with_brick_and_import_with_bricks():
-    parent = LdrModel(Path("Parent.ldr"))
-    parent.add(Brick(name="brick.ldr"))
+    parent = LdrModel(Path("Parent"))
+    parent.add(Brick(name="brick"))
 
-    child = LdrModel(Path("Child.ldr"))
-    child.add(Brick(name="brick.ldr"))
+    child = LdrModel(Path("Child"))
+    child.add(Brick(name="brick"))
     parent.add(child)
     assert repr(parent) == "\n".join(
         [
             "0 FILE Parent.ldr",
-            "1 16 0 0 0 1 0 0 0 1 0 0 0 1 brick.ldr",
+            "1 16 0 0 0 1 0 0 0 1 0 0 0 1 brick.dat",
             "1 16 0 0 0 1 0 0 0 1 0 0 0 1 Child.ldr",
         ]
     )

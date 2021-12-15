@@ -2,6 +2,8 @@ import numpy as np
 
 
 class Brick:
+    EXTENSION = "dat"
+
     def __init__(self, **kwargs):
         self.name = kwargs.pop("name", "")
         self.position = kwargs.pop("position", [0, 0, 0])
@@ -27,7 +29,7 @@ class Brick:
     def __repr__(self):
         position = " ".join([str(i) for i in self.position])
         orientation = " ".join([num2str(i) for i in self.orientation.flatten()])
-        return f"1 {self.color} {position} {orientation} {self.name}"
+        return f"1 {self.color} {position} {orientation} {self.name}.dat"
 
 
 def str2num(i):

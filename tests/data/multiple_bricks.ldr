@@ -1,4 +1,4 @@
 O FILE multiple_brick_brick.ldr
-1 15 0 1 2 1 0 0 0 1 0 0 0 1 brick.ldr
-1 15 0 2 1 1 0 0 0 1 0 0 0 1 brick.ldr
-1 15 2 1 0 1 0 0 0 1 0 0 0 1 brick.ldr
+1 15 0 1 2 1 0 0 0 1 0 0 0 1 brick.dat
+1 15 0 2 1 1 0 0 0 1 0 0 0 1 brick.dat
+1 15 2 1 0 1 0 0 0 1 0 0 0 1 brick.dat

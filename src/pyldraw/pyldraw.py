@@ -1,3 +1,4 @@
+import re
 from pathlib import Path
 
 from pyldraw.brick import Brick
@@ -5,6 +6,8 @@ from pyldraw.parser import parser
 
 
 class LdrModel(Brick):
+    EXTENSION = "ldr"
+
     def __init__(self, path: Path, **kwargs):
         super(LdrModel, self).__init__(**kwargs)
         self.name = path.name
@@ -32,11 +35,15 @@ class LdrModel(Brick):
 
     def get_file_content(self):
         data = "\n".join([repr(brick) for brick in self.data["bricks"]])
-        repr_str = f"0 FILE {self.name}\n{data}"
+        repr_str = f"0 FILE {self.name}.{self.EXTENSION}\n{data}"
         return repr_str
 
     def get_file_import(self):
-        return super().__repr__()
+        return re.sub(
+            fr"\b{Brick.EXTENSION}\b",
+            self.EXTENSION,
+            super().__repr__(),
+        )
 
     def add(self, brick):
         self.data.setdefault("bricks", []).append(brick)

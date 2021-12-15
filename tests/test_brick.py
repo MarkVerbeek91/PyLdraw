@@ -63,12 +63,12 @@ def test_brick_print_info():
     ],
 )
 def test_brick_repr_info(input_kwargs, expected):
-    brick = Brick(name="brick.ldr", **input_kwargs)
-    assert repr(brick) == f"1 {expected} brick.ldr"
+    brick = Brick(name="brick", **input_kwargs)
+    assert repr(brick) == f"1 {expected} brick.dat"
 
 
 def test_brick_factory():
-    result = Factory.gen("15 0 0 0 1 0 0 0 1 0 0 0 1 brick.ldr")
+    result = Factory.gen("15 0 0 0 1 0 0 0 1 0 0 0 1 brick.dat")
     assert isinstance(result, Brick)
 
 
@@ -81,7 +81,7 @@ def test_brick_factory():
     ],
 )
 def test_brick_factory_set_position(position, expected):
-    result = Factory.gen(f"15 {position} 1 0 0 0 1 0 0 0 1 brick.ldr")
+    result = Factory.gen(f"15 {position} 1 0 0 0 1 0 0 0 1 brick.dat")
     assert result.position == expected
 
 
@@ -93,11 +93,11 @@ def test_brick_factory_set_position(position, expected):
     ],
 )
 def test_brick_factory_set_orientation(orientation, expected):
-    result = Factory.gen(f"15 0 0 0 {orientation} brick.ldr")
+    result = Factory.gen(f"15 0 0 0 {orientation} brick.dat")
     expected = np.array(expected)
     np.testing.assert_array_equal(result.orientation, expected)
 
 
 def test_brick_factory_set_names():
-    result = Factory.gen("15 1 2 3 1 2 3 2 3 4 3 4 5 brick.ldr")
+    result = Factory.gen("15 1 2 3 1 2 3 2 3 4 3 4 5 brick.dat")
     assert result.name == "brick"
