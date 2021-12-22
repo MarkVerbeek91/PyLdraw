@@ -5,7 +5,6 @@ import pytest
 from pyldraw.brick import Brick
 from pyldraw.parser import ParserError
 from pyldraw.parser import parser as file_parser
-from pyldraw.step import Step
 
 
 def test_empty_file_is_empty_dict():

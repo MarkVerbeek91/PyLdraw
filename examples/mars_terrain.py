@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from pyldraw.brick import Brick
-from pyldraw.pyldraw import LdrModel
+from pyldraw.model import LdrModel
 
 terrain = LdrModel(Path("terrain.ldr"))
 

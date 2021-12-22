@@ -4,7 +4,7 @@ from unittest import mock
 import pytest
 
 from pyldraw.brick import Brick
-from pyldraw.pyldraw import LdrModel, NotLdrModelError
+from pyldraw.model import LdrModel, NotLdrModelError
 
 
 def test_ldr_model_new_file():
@@ -122,3 +122,7 @@ def test_parent_add_itself_as_parent_to_child():
     child = LdrModel(Path())
     parent.add(child)
     assert child.parent == parent
+
+
+# def test_add_step_to_model():
+#     model = LdrModel(Path())

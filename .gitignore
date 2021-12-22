@@ -1,0 +1,5 @@
+*.coverage
+.idea/
+coverage_html_report/
+htmlcov/
+docs/build

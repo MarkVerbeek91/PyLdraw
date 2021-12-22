@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from pyldraw.pyldraw import LdrModel
+from pyldraw.model import LdrModel
 
 mars_rover = LdrModel(Path("references", "Lego_mars_rover.ldr"))
 
